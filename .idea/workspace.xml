@@ -4,20 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52a56131-9516-4ecf-90a9-5295675ab8e4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shotNoise.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Poisson.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Shot PSD.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Shutter Speed and Mean.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Thermal PSD.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mean and variance.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/physrev.mplstyle" afterDir="false" />
+    <list default="true" id="ab38ce27-e075-4dcb-9388-7280701064c7" name="Changes" comment="Init">
+      <change afterPath="$PROJECT_DIR$/Noise Images.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Radial Shot PSD.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/consts.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shotNoise.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shotNoise.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Shot PSD.py" beforeDir="false" afterPath="$PROJECT_DIR$/Shot PSD.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Shutter Speed and Mean.py" beforeDir="false" afterPath="$PROJECT_DIR$/Shutter Speed and Mean.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Thermal PSD.py" beforeDir="false" afterPath="$PROJECT_DIR$/Thermal PSD.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mean and variance.py" beforeDir="false" afterPath="$PROJECT_DIR$/Mean and Variance.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/physrev.mplstyle" beforeDir="false" afterPath="$PROJECT_DIR$/physrev.mplstyle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,26 +33,27 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 0
+  &quot;associatedIndex&quot;: 1
 }</component>
-  <component name="ProjectId" id="3Dc3vWrQf1DY9aSOrMmNZsaVrqg" />
+  <component name="ProjectId" id="3DoX0UM33E3vQXxYQrsXzWkbyTQ" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.PSD.executor": "Run",
-    "Python.Poisson.executor": "Run",
-    "Python.Shot PSD.executor": "Run",
-    "Python.Shutter Speed and Mean.executor": "Run",
-    "Python.Thermal PSD.executor": "Run",
-    "Python.mean and variance.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.Mean and Variance.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Noise Images.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Radial Shot PSD.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Shot PSD.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Shutter Speed and Mean.executor&quot;: &quot;Run&quot;,
+    &quot;Python.Thermal PSD.executor&quot;: &quot;Run&quot;,
+    &quot;Python.mean and variance.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -65,21 +64,37 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="52a56131-9516-4ecf-90a9-5295675ab8e4" name="Changes" comment="" />
-      <created>1778567762168</created>
+      <changelist id="ab38ce27-e075-4dcb-9388-7280701064c7" name="Changes" comment="Init" />
+      <created>1778949173223</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1778567762168</updated>
+      <updated>1778949173223</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/mean and variance.py</url>
-          <line>45</line>
+          <url>file://$PROJECT_DIR$/Shutter Speed and Mean.py</url>
+          <line>24</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Noise Images.py</url>
+          <line>12</line>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

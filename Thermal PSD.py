@@ -2,44 +2,66 @@ import numpy as np
 import rawpy
 import matplotlib.pyplot as plt
 from pathlib import Path
+import pandas as pd
+import re
+from datetime import datetime
+import zoneinfo
+
+from utils import get_green_channel
 
 # --- CONFIGURATION ---
-# folder_path = Path(r"C:\Physics\Year 3\Lab\Noise\Data\10.05\Dark")
 folder_path = Path(r"C:\Physics\Year 3\Lab\Noise\Data\12.05\Thermal")
+csv_path = Path(r"C:\Physics\Year 3\Lab\Noise\Data\12.05\Thermal\BatteryTemp.csv")
 extension = "*.DNG"
-margin = 256  # Resulting in a 512x512 crop (Power of 2 is faster for FFT)
+margin = 256  # Resulting in a 512x512 crop
 SHOW = False
 
-shutter_speeds = [
-    1/10585, 1/10585, 1/9340, 1/8357, 1/7217, 1/6107, 1/6107, 1/5122, 1/4071, 1/3053,
-    1/2010, 1/1005, 1/902, 1/802, 1/703, 1/601, 1/501, 1/401, 1/300, 1/200,
-    1/100, 1/90, 1/80, 1/70, 1/60, 1/50, 1/45, 1/35, 1/40, 1/30, 1/30, 1/20,
-    0.2, 1/15, 1/10, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.91, 1.1, 1.2, 1.3, 1.4,
-    1.8, 2, 2, 4, 6, 8, 10, 15
-]
+# Set the correct local timezone
+israel_tz = zoneinfo.ZoneInfo("Asia/Jerusalem")
 
+# 1. Load the Battery Temperature Data
+temp_df = pd.read_csv(csv_path)
+temp_timestamps = temp_df['time'].values / 1e9  # Convert ns to standard Unix seconds
+temperatures = temp_df['temperature'].values
 
-def get_green_channel(filepath):
-    try:
-        with rawpy.imread(str(filepath)) as raw:
-            return raw.raw_image.astype(np.float64)[0::2, 1::2]
-    except Exception as e:
-        print(f"Error reading {filepath}: {e}")
-        return None
-
-
+# 2. Setup Data Collection
 files = sorted(list(folder_path.glob(extension)))
 num_pairs = len(files) // 2
 avg_psd_values = []
-
+pair_temperatures = []
 
 print(f"Processing {num_pairs} pairs...")
 
 for i in range(num_pairs):
-    img1 = get_green_channel(files[2 * i])
-    img2 = get_green_channel(files[2 * i + 1])
+    file1 = files[2 * i]
+    file2 = files[2 * i + 1]
+
+    img1 = get_green_channel(file1)
+    img2 = get_green_channel(file2)
 
     if img1 is None or img2 is None: continue
+
+    # --- Extract Time from Filename ---
+    # Looks for the standard pattern: 8 digits, underscore, 6 digits (e.g., 20260510_131817)
+    match = re.search(r"(\d{8}_\d{6})", file1.name)
+    if not match:
+        print(f"Warning: Could not extract date from {file1.name}. Skipping.")
+        continue
+
+    date_str = match.group(1)
+
+    # Parse the string into a naive datetime object
+    local_dt = datetime.strptime(date_str, "%Y%m%d_%H%M%S")
+
+    # Make it timezone-aware (Israel Local Time)
+    aware_dt = local_dt.replace(tzinfo=israel_tz)
+
+    # Convert to standard UTC Unix timestamp to match the CSV
+    file_timestamp = aware_dt.timestamp()
+
+    # Interpolate to find the exact temperature at that second
+    current_temp = np.interp(file_timestamp, temp_timestamps, temperatures)
+    pair_temperatures.append(current_temp)
 
     h, w = img1.shape
     crop1 = img1[h // 2 - margin: h // 2 + margin, w // 2 - margin: w // 2 + margin]
@@ -53,45 +75,30 @@ for i in range(num_pairs):
     fft_img = np.fft.fft2(diff)
     psd_2d = np.abs(np.fft.fftshift(fft_img)) ** 2 / diff.size
 
-    # Calculate Average PSD for the summary plot later
     avg_psd_values.append(np.mean(psd_2d))
 
     # --- Plotting Individual PSD ---
-    # We'll plot a 1D slice through the center of the 2D PSD
     mid = psd_2d.shape[0] // 2
     if i % 5 == 0 and SHOW:
         plt.plot(psd_2d[mid, :], color='teal', lw=1)
         plt.axhline(y=np.mean(psd_2d), color='orange', linestyle='--', alpha=0.8)
-        plt.title(f"Pair {i}: Mean PSD = {avg_psd_values[-1]:.2f}")
+        plt.title(f"Pair {i}: Mean PSD = {avg_psd_values[-1]:.2f} @ {current_temp:.1f}°C")
         plt.yscale('log')
         plt.grid(True, alpha=0.2)
         plt.show()
 
-# --- Summary Plot: Avg PSD vs Image Number ---
-
-# Calculate the linear fit (y = mx + c)
-# z = np.polyfit(shutter_speeds, avg_psd_values, 1)
-# p = np.poly1d(z)
-#
-# # Calculate R squared
-# y_pred = p(shutter_speeds)
-# y_actual = np.array(avg_psd_values)
-# ss_res = np.sum((y_actual - y_pred)**2)
-# ss_tot = np.sum((y_actual - np.mean(y_actual))**2)
-# r_squared = 1 - (ss_res / ss_tot)
-# print(f"{r_squared=}")
-#
-# print(f"Slope (Gain): {z[0]:.5f}")
-# print(f"Intercept: {z[1]:.5f}")
-# print(f"R-squared: {r_squared:.5f}")
-
+# --- Plotting Summary ---
 plt.figure(figsize=(10, 5))
-# plt.scatter(shutter_speeds, avg_psd_values)
-plt.scatter([i for i in range(len(avg_psd_values))], avg_psd_values)
-# plt.plot(shutter_speeds, p(shutter_speeds), "r--", label=f"Fit: y={z[0]:.4f}x + {z[1]:.4f}, R^2={r_squared:.3f}")
-plt.title('Average Power Spectral Density per Shutter Speed')
-plt.xlabel('Shutter Speed')
+
+# Use the explicitly matched temperatures for the X axis
+plt.scatter(pair_temperatures, avg_psd_values, color='firebrick', alpha=0.7, edgecolor='black')
+
+plt.title('Average Power Spectral Density by Battery Temperature, ISO=600')
+plt.xlabel('Battery Temperature [°C]')
 plt.ylabel('Average PSD Value')
-plt.grid(True, alpha=0.3)
-plt.legend()
+plt.grid(True, alpha=0.3, linestyle='--')
+
+# Save and Show
+plt.tight_layout()
+plt.savefig(r"C:\Physics\Year 3\Lab\Noise\Camera Noise\Plots\PSD by Temp.png")
 plt.show()

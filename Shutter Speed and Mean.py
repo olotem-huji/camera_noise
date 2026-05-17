@@ -72,5 +72,6 @@ plt.xlabel('Shutter Speed [sec]')
 plt.ylabel('Mean Signal [DN]')
 plt.grid(True, alpha=0.3)
 plt.legend()
+plt.savefig(r"C:\Physics\Year 3\Lab\Noise\Camera Noise\Plots\Mean by Shutter Speed.png")
 plt.show()
 

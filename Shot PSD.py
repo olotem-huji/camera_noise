@@ -8,7 +8,7 @@ folder_path = Path(r"C:\Physics\Year 3\Lab\Noise\Data\10.05\Dark")
 extension = "*.DNG"
 margin = 256  # Resulting in a 512x512 crop (Power of 2 is faster for FFT)
 
-SHOW = False
+SHOW = True
 
 shutter_speeds = [
     1/10585, 1/10585, 1/9340, 1/8357, 1/7217, 1/6107, 1/6107, 1/5122, 1/4071, 1/3053,
@@ -63,7 +63,7 @@ for i in range(num_pairs):
         plt.plot(psd_2d[mid, :], color='teal', lw=1)
         plt.axhline(y=np.mean(psd_2d), color='orange', linestyle='--', alpha=0.8)
         plt.title(f"Pair {i}: Mean PSD = {avg_psd_values[-1]:.2f}")
-        plt.yscale('log')
+        # plt.yscale('log')
         plt.grid(True, alpha=0.2)
         plt.show()
 
